@@ -5,12 +5,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class ChitChatHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-    private lateinit var messageText: TextView
 
-    fun bind(urlString: String?) {
-    }
+    private var messageText: TextView = itemView.findViewById(R.id.messageText)
 
-    init {
-        messageText = itemView.findViewById(R.id.messageText)
+    fun bind(chat: Chat) {
+        messageText.text = chat.message
     }
 }

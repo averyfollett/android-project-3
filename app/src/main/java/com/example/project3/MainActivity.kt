@@ -3,6 +3,7 @@ package com.example.project3
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import okhttp3.OkHttpClient
@@ -18,13 +19,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var chitChatAdapter: ChitChatAdapter
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
-    private val chitChatURL = "https://www.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1"
+    private lateinit var chats: ArrayList<Chat>
+
+    private val chitChatURL = "https://www.stepoutnyc.com/chitchat?method=request.get&key=fa070b3c-0685-431d-9fe2-e156bcbcfadb&client=avery.follett@mymail.champlain.edu"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        chitChatAdapter = ChitChatAdapter(this)
+        chats = ArrayList()
+
+        chitChatAdapter = ChitChatAdapter(this, chats)
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = chitChatAdapter
@@ -68,12 +73,15 @@ class MainActivity : AppCompatActivity() {
     private fun parseJSON(jsonString: String) {
         try {
             val responseObject = JSONObject(jsonString)
-            val items = responseObject.getJSONArray("items")
+            val items = responseObject.getJSONArray("messages")
             for (i in 0 until items.length()) {
                 val item = items.getJSONObject(i)
-                val media = item.getJSONObject("media")
-                val urlString = media.getString("m")
-                //mPhotosURLs!!.add(0, urlString)
+                val id = item.getString("_id")
+                val message = item.getString("message")
+                val timestamp = item.getString("date")
+                val likes = item.getString("likes").toInt()
+                val dislikes = item.getString("dislikes").toInt()
+                chats.add(Chat(id, message, timestamp, likes, dislikes))
             }
         } catch (e: Exception) {
             e.printStackTrace()
