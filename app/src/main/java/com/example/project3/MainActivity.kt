@@ -3,7 +3,6 @@ package com.example.project3
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import okhttp3.OkHttpClient
@@ -39,12 +38,10 @@ class MainActivity : AppCompatActivity() {
         refresh()
     }
 
-
     private fun refresh() {
         val rt = RefreshTask()
         rt.execute()
     }
-
 
     private inner class RefreshTask : AsyncTask<Void?, Void?, String>() {
         override fun doInBackground(vararg voids: Void?): String {
@@ -61,14 +58,11 @@ class MainActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String) {
             super.onPostExecute(result)
-            //Log.d(RESPONSE_TAG, result)
             parseJSON(result)
             chitChatAdapter.notifyDataSetChanged()
             swipeRefreshLayout.isRefreshing = false
         }
     }
-
-
 
     private fun parseJSON(jsonString: String) {
         try {
@@ -77,11 +71,12 @@ class MainActivity : AppCompatActivity() {
             for (i in 0 until items.length()) {
                 val item = items.getJSONObject(i)
                 val id = item.getString("_id")
+                val clientName = item.getString("client").replaceAfter("@", "").replace("@", "")
                 val message = item.getString("message")
                 val timestamp = item.getString("date")
                 val likes = item.getString("likes").toInt()
                 val dislikes = item.getString("dislikes").toInt()
-                chats.add(Chat(id, message, timestamp, likes, dislikes))
+                chats.add(Chat(id, clientName, message, timestamp, likes, dislikes))
             }
         } catch (e: Exception) {
             e.printStackTrace()

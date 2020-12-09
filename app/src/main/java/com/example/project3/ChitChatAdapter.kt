@@ -18,5 +18,4 @@ class ChitChatAdapter(private var context: Context, private var chats: ArrayList
     override fun getItemCount(): Int {
         return chats.size
     }
-
 }

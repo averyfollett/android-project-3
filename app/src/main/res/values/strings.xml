@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Project3</string>
+    <string name="likes_text">Likes</string>
+    <string name="dislikes_text">Dislikes</string>
+    <string name="placeholder_message_text">"This is an example message text. Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah "</string>
+    <string name="placeholder_timestamp_text">Date and Time</string>
+    <string name="placeholder_name_text">FirstName LastName</string>
 </resources>
