@@ -5,4 +5,6 @@
     <string name="placeholder_message_text">"This is an example message text. Blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah "</string>
     <string name="placeholder_timestamp_text">Date and Time</string>
     <string name="placeholder_name_text">FirstName LastName</string>
+    <string name="message_hint_text">Write a message...</string>
+    <string name="send_text">Send</string>
 </resources>
