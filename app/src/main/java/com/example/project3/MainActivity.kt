@@ -12,7 +12,6 @@ import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.json.JSONObject
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         refresh()
     }
 
-    private fun refresh() {
+    fun refresh() {
         val rt = RefreshTask()
         rt.execute()
     }
@@ -62,6 +61,16 @@ class MainActivity : AppCompatActivity() {
     private fun post(message: String) {
         val pt = PostMessageTask(message)
         pt.execute()
+    }
+
+    fun like(messageID: String) {
+        val lt = LikeTask(messageID)
+        lt.execute()
+    }
+
+    fun dislike(messageID: String) {
+        val dt = DislikeTask(messageID)
+        dt.execute()
     }
 
     private inner class RefreshTask : AsyncTask<Void?, Void?, String>() {
@@ -94,7 +103,6 @@ class MainActivity : AppCompatActivity() {
 
     private inner class PostMessageTask(private var message: String) : AsyncTask<Void?, Void?, String>() {
         override fun doInBackground(vararg voids: Void?): String {
-
             val requestBody: RequestBody = MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
                     .addFormDataPart("key", "fa070b3c-0685-431d-9fe2-e156bcbcfadb")
@@ -114,10 +122,49 @@ class MainActivity : AppCompatActivity() {
                 "Error: Could not complete request."
             }
         }
+    }
 
-        override fun onPostExecute(result: String) {
-            super.onPostExecute(result)
+    private inner class LikeTask(private var messageID: String) : AsyncTask<Void?, Void?, String>() {
+        override fun doInBackground(vararg voids: Void?): String {
+            val likeURL = "$chitChatURL/like/$messageID"
+            var urlBuilder = likeURL.toHttpUrlOrNull()?.newBuilder()
+            if (urlBuilder != null) {
+                urlBuilder.addQueryParameter("key", "fa070b3c-0685-431d-9fe2-e156bcbcfadb")
+                urlBuilder.addQueryParameter("client", "avery.follett@mymail.champlain.edu")
+            }
+            var getURL = urlBuilder?.build().toString()
 
+            val request: Request = Request.Builder()
+                    .url(getURL)
+                    .build()
+            try {
+                httpClient.newCall(request).execute().use { response -> return response.body!!.string() }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return "Error: Could not complete request."
+            }
+        }
+    }
+
+    private inner class DislikeTask(private var messageID: String) : AsyncTask<Void?, Void?, String>() {
+        override fun doInBackground(vararg voids: Void?): String {
+            val likeURL = "$chitChatURL/dislike/$messageID"
+            var urlBuilder = likeURL.toHttpUrlOrNull()?.newBuilder()
+            if (urlBuilder != null) {
+                urlBuilder.addQueryParameter("key", "fa070b3c-0685-431d-9fe2-e156bcbcfadb")
+                urlBuilder.addQueryParameter("client", "avery.follett@mymail.champlain.edu")
+            }
+            var getURL = urlBuilder?.build().toString()
+
+            val request: Request = Request.Builder()
+                    .url(getURL)
+                    .build()
+            try {
+                httpClient.newCall(request).execute().use { response -> return response.body!!.string() }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return "Error: Could not complete request."
+            }
         }
     }
 
